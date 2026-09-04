@@ -9,7 +9,9 @@ const publishedHonors = honors.filter((honor) => !honor.draft)
 <PageLayout title='Awards and Honors'>
   {
     publishedHonors.length > 0 ? (
-      <HonorCards items={publishedHonors} />
+      <div class='not-prose'>
+        <HonorCards items={publishedHonors} />
+      </div>
     ) : (
       <p class='text-muted-foreground'>No honors have been added yet.</p>
     )
