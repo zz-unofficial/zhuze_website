@@ -200,6 +200,27 @@ export const terms: CardListData = {
   ]
 }
 
+export interface EducationItem {
+  institution: string
+  website: string
+  programme: string
+  period: string
+  logo: string
+  logoAlt: string
+}
+
+/** Education history shown on the homepage, newest entry first. */
+export const education: EducationItem[] = [
+  {
+    institution: 'Northwestern Polytechnical University',
+    website: 'https://www.nwpu.edu.cn/',
+    programme: 'Undergraduate, Electronic Information Engineering, School of Electronics and Information',
+    period: 'September 2024 – Present',
+    logo: '/src/assets/nwpu-logo.png',
+    logoAlt: 'Northwestern Polytechnical University logo'
+  }
+]
+
 /**
  * Homepage profile card. Replace the placeholder values below with your own details.
  * The card is rendered at the top of the homepage.
