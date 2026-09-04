@@ -72,3 +72,62 @@ const primaryColor = data.heroImage?.color ?? 'hsl(var(--primary) / var(--un-tex
 </PageLayout>
 
 {config.integ.mediumZoom.enable && <MediumZoom />}
+
+<script>
+  const mermaidBlocks = Array.from(
+    document.querySelectorAll<HTMLElement>('#content .astro-code[data-language="mermaid"]')
+  )
+
+  if (mermaidBlocks.length) {
+    void (async () => {
+      const { default: mermaid } = await import('mermaid')
+      const diagrams = mermaidBlocks.flatMap((block, index) => {
+        const source = block.querySelector('code')?.textContent?.trim()
+        if (!source) return []
+
+        const container = document.createElement('div')
+        container.className = 'mermaid-diagram'
+        block.replaceWith(container)
+
+        return [{ container, id: `mermaid-${Date.now()}-${index}`, source }]
+      })
+
+      mermaid.initialize({
+        startOnLoad: false,
+        securityLevel: 'strict',
+        theme: document.documentElement.classList.contains('dark') ? 'dark' : 'default'
+      })
+
+      for (const diagram of diagrams) {
+        try {
+          const { svg, bindFunctions } = await mermaid.render(diagram.id, diagram.source)
+          diagram.container.innerHTML = svg
+          bindFunctions?.(diagram.container)
+        } catch (error) {
+          console.error('Mermaid diagram failed to render:', error)
+          const fallback = document.createElement('pre')
+          fallback.textContent = diagram.source
+          diagram.container.replaceChildren(fallback)
+        }
+      }
+    })()
+  }
+</script>
+
+<style>
+  #content :global(.mermaid-diagram) {
+    margin: 1.5rem 0;
+    overflow-x: auto;
+    border: 1px solid hsl(var(--border) / var(--un-border-opacity));
+    border-radius: 1rem;
+    background-color: hsl(var(--muted) / var(--un-bg-opacity));
+    padding: 1rem;
+  }
+
+  #content :global(.mermaid-diagram svg) {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+  }
+</style>

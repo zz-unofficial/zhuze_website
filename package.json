@@ -26,6 +26,7 @@
     "astro": "6.2.1",
     "astro-pure": "1.4.7",
     "katex": "^0.16.45",
+    "mermaid": "^11.17.2",
     "rehype-katex": "^7.0.1",
     "remark-math": "^6.0.0",
     "sharp": "^0.34.5",

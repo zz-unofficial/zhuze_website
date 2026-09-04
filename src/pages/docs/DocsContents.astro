@@ -38,7 +38,7 @@ const { title = true, class: className, ...props } = Astro.props
         <li>
           <h3 class='text-muted-foreground text-xs tracking-widest uppercase'>{title}</h3>
           <ul class='mt-2 flex flex-col'>
-            {docsByCate[id]
+            {(docsByCate[id] ?? [])
               .sort((a, b) => a.data.order - b.data.order)
               .map((doc) => (
                 <li class='docs-item flex relative ms-2 px-3 py-1 text-foreground/75 transition-all rounded-2xl'>

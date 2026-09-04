@@ -1,11 +1,13 @@
 ---
+import type { CollectionEntry } from 'astro:content'
+
 import { Quote } from 'astro-pure/advanced'
-import { PostPreview } from 'astro-pure/components/pages'
 import { getBlogCollection, sortMDByDate } from 'astro-pure/server'
 import { Button, Card } from 'astro-pure/user'
 import HonorsSection from '@/components/honors/HonorsSection.astro'
 import PageLayout from '@/layouts/BaseLayout.astro'
 import EducationSection from '@/components/home/EducationSection.astro'
+import PostsSection from '@/components/home/PostsSection.astro'
 import ProfileIntro from '@/components/home/ProfileIntro.astro'
 import ProjectCard from '@/components/home/ProjectCard.astro'
 import Section from '@/components/home/Section.astro'
@@ -16,9 +18,9 @@ const languages = ['Html', 'JavaScript', 'CSS', 'Shell']
 const frontend = ['TypeScript', 'Vite', 'Webpack', 'Astro']
 const backend = ['Vercel', 'Waline']
 
-const MAX_POSTS = 10
-const allPosts = await getBlogCollection()
-const allPostsByDate = sortMDByDate(allPosts).slice(0, MAX_POSTS)
+const MAX_POSTS = 2
+const allPosts = (await getBlogCollection()) as CollectionEntry<'blog'>[]
+const allPostsByDate = sortMDByDate(allPosts).slice(0, MAX_POSTS) as CollectionEntry<'blog'>[]
 const publishedHonors = honors.filter((honor) => !honor.draft)
 const featuredHonors = publishedHonors.slice(0, 2)
 
@@ -49,50 +51,6 @@ const avatar = (await images[imagePath]()).default
         </p>
         <Button title='More about me' class='w-fit self-end' href='/about' variant='ahead' />
       </Section>
-      {
-        allPostsByDate.length > 0 && (
-          <Section title='Posts'>
-            <ul class='flex flex-col gap-y-1.5 sm:gap-y-2'>
-              {allPostsByDate.map((p) => (
-                <li class='flex flex-col gap-x-2 sm:flex-row'>
-                  <PostPreview post={p} />
-                </li>
-              ))}
-            </ul>
-            <Button title='More posts' class='w-fit self-end' href='/blog' variant='ahead' />
-          </Section>
-        )
-      }
-
-      {
-        /* <Section title='Experience'>
-      <Card
-        heading='Lorem Ipsum'
-        subheading='Sit amet consectetur'
-        date='Dec 2022 - Nov 2023'
-        imagePath='/src/assets/about-astro.png'
-        altText='Lorem, ipsum dolor sit'
-        imageClass='h-12 w-auto md:-start-16'
-      >
-        <ul class='ms-4 list-disc text-muted-foreground'>
-          <li>
-            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Dolore debitis recusandae, ut
-            molestiae laboriosam pariatur!
-
-            <li>Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestiae, pariatur!</li>
-          </li>
-        </ul>
-      </Card>
-      <Card
-        heading='Lorem Ipsum'
-        subheading='Sit amet consectetur'
-        date='Dec 2022 - Nov 2023'
-        imagePath='/src/assets/about-astro.png'
-        altText='Lorem, ipsum dolor sit'
-        imageClass='h-12 w-auto md:-start-16'
-      />
-    </Section> */
-      }
       <EducationSection items={education} />
       {
         featuredHonors.length > 0 && (
@@ -103,6 +61,7 @@ const avatar = (await images[imagePath]()).default
         )
       }
 
+      <PostsSection items={allPostsByDate} />
       <Section title='Website List'>
         <div class='grid grid-cols-1 gap-3 sm:grid-cols-2'>
           <ProjectCard

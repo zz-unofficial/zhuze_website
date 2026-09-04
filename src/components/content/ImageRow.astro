@@ -1,0 +1,57 @@
+---
+import { Image } from 'astro:assets'
+import type { ImageMetadata } from 'astro'
+
+type ImageItem = {
+  src: ImageMetadata
+  alt: string
+  grow?: number
+}
+
+type Props = {
+  images: ImageItem[]
+}
+
+const { images } = Astro.props
+---
+
+<div class='image-row'>
+  {
+    images.map((image) => (
+      <Image
+        src={image.src}
+        alt={image.alt}
+        class='image-row-item'
+        style={`--image-grow: ${image.grow ?? 1}`}
+      />
+    ))
+  }
+</div>
+
+<style>
+  .image-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin: 1.5rem 0;
+  }
+
+  .image-row :global(.image-row-item) {
+    flex: var(--image-grow) 1 0;
+    min-width: 0;
+    width: 100%;
+    height: auto;
+    margin: 0;
+    object-fit: contain;
+  }
+
+  @media (max-width: 40rem) {
+    .image-row {
+      flex-direction: column;
+    }
+
+    .image-row :global(.image-row-item) {
+      width: 100%;
+    }
+  }
+</style>
