@@ -1,0 +1,32 @@
+---
+import { Button } from 'astro-pure/user'
+import type { HonorItem } from '@/site-config'
+import HonorCards from './HonorCards.astro'
+
+interface Props {
+  items: HonorItem[]
+  moreHref?: string
+}
+
+const { items, moreHref } = Astro.props
+---
+
+<section class='honors-section'>
+  <h2>Awards and Honors</h2>
+  <HonorCards {items} />
+  {moreHref && <Button title='More honors' class='w-fit self-end' href={moreHref} variant='ahead' />}
+</section>
+
+<style>
+  .honors-section {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .honors-section h2 {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 600;
+  }
+</style>

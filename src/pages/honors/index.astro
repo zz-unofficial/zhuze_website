@@ -1,0 +1,17 @@
+---
+import HonorCards from '@/components/honors/HonorCards.astro'
+import PageLayout from '@/layouts/CommonPage.astro'
+import { honors } from '@/site-config'
+
+const publishedHonors = honors.filter((honor) => !honor.draft)
+---
+
+<PageLayout title='Awards and Honors'>
+  {
+    publishedHonors.length > 0 ? (
+      <HonorCards items={publishedHonors} />
+    ) : (
+      <p class='text-muted-foreground'>No honors have been added yet.</p>
+    )
+  }
+</PageLayout>

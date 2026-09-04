@@ -1,0 +1,54 @@
+---
+import { getCollection, render, type CollectionEntry } from 'astro:content'
+import { TOC } from 'astro-pure/components/pages'
+import PageLayout from '@/layouts/ContentLayout.astro'
+import { honors, type HonorItem } from '@/site-config'
+
+export const prerender = true
+
+type DetailHonor = HonorItem & { slug: string }
+
+export async function getStaticPaths() {
+  const getSlugFromEntryId = (id: string) =>
+    id.endsWith('/index') ? id.slice(0, -'/index'.length) : id
+  const contentEntries = await getCollection('honors', (entry) => !entry.data.draft)
+  const entriesBySlug = new Map(
+    contentEntries.map((entry) => [getSlugFromEntryId(entry.id), entry])
+  )
+  const detailHonors = honors.filter(
+    (honor): honor is DetailHonor => !honor.draft && 'slug' in honor
+  )
+
+  for (const honor of detailHonors) {
+    if (!entriesBySlug.has(honor.slug))
+      throw new Error(
+        `Honor "${honor.title}" requires src/content/honors/${honor.slug}/index.md for its details page`
+      )
+  }
+
+  return detailHonors.map((honor) => ({
+    params: { slug: honor.slug },
+    props: { honor, entry: entriesBySlug.get(honor.slug)! }
+  }))
+}
+
+interface Props {
+  honor: DetailHonor
+  entry: CollectionEntry<'honors'>
+}
+
+const { honor, entry } = Astro.props
+const { Content, headings } = await render(entry)
+---
+
+<PageLayout meta={{ title: honor.title, description: honor.description }} back='/honors'>
+  {headings.length > 0 && <TOC {headings} slot='sidebar' />}
+
+  <Fragment slot='header'>
+    <h1 class='text-2xl font-medium sm:mb-2 sm:text-3xl'>{honor.title}</h1>
+    <p class='mt-3 text-muted-foreground'>{honor.description}</p>
+    <p class='mt-2 text-sm text-muted-foreground'>{honor.date}</p>
+  </Fragment>
+
+  <Content />
+</PageLayout>

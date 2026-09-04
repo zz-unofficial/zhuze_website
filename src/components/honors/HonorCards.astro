@@ -1,0 +1,164 @@
+---
+import type { HonorItem } from '@/site-config'
+
+interface Props {
+  items: HonorItem[]
+}
+
+const { items } = Astro.props
+
+const images = import.meta.glob<{ default: ImageMetadata }>(
+  '/src/**/*.{jpeg,jpg,png,gif,avif,webp}'
+)
+const entries = await Promise.all(
+  items.map(async (item) => {
+    const loadImage = images[item.image]
+    if (!loadImage)
+      throw new Error(`"${item.image}" does not exist in the "src" directory`)
+
+    const isExternal = 'link' in item
+    return {
+      ...item,
+      image: (await loadImage()).default,
+      href: isExternal ? item.link : `/honors/${item.slug}`,
+      isExternal
+    }
+  })
+)
+---
+
+<div class='honor-list'>
+  {
+    entries.map((entry) => (
+      <article class='honor-card'>
+        <img class='honor-image' src={entry.image.src} alt={entry.imageAlt} loading='lazy' />
+        <div class='honor-content'>
+          <h3>
+            <a
+              href={entry.href}
+              target={entry.isExternal ? '_blank' : undefined}
+              rel={entry.isExternal ? 'noreferrer' : undefined}
+            >
+              {entry.title}
+            </a>
+          </h3>
+          <p class='honor-description'>{entry.description}</p>
+          {
+            entry.tags.length > 0 && (
+              <ul class='honor-tags' aria-label='Categories'>
+                {entry.tags.map((tag) => (
+                  <li>{tag}</li>
+                ))}
+              </ul>
+            )
+          }
+          <p class='honor-date'>{entry.date}</p>
+        </div>
+      </article>
+    ))
+  }
+</div>
+
+<style>
+  .honor-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .honor-card {
+    display: grid;
+    grid-template-columns: minmax(12rem, 17rem) minmax(0, 1fr);
+    align-items: center;
+    gap: clamp(1.25rem, 3vw, 2.5rem);
+    overflow: hidden;
+    border: 1px solid hsl(var(--border));
+    border-radius: 1.5rem;
+    background: hsl(var(--muted));
+  }
+
+  .honor-image {
+    width: 100%;
+    height: 14rem;
+    min-height: 0;
+    padding: 0.75rem;
+    background: hsl(var(--muted));
+    object-fit: contain;
+    object-position: center;
+  }
+
+  .honor-content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 1.5rem 1.75rem 1.5rem 0;
+  }
+
+  .honor-content h3 {
+    margin: 0;
+    font-size: clamp(1.25rem, 2.5vw, 1.75rem);
+    line-height: 1.25;
+  }
+
+  .honor-content h3 a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .honor-content h3 a:hover {
+    color: hsl(var(--primary));
+  }
+
+  .honor-description,
+  .honor-date {
+    margin: 0.7rem 0 0;
+    color: hsl(var(--muted-foreground));
+    font-size: 1rem;
+    line-height: 1.55;
+  }
+
+  .honor-description {
+    white-space: pre-line;
+  }
+
+  .honor-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.55rem;
+    margin: 1rem 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .honor-tags li {
+    border: 1px solid hsl(var(--primary) / 0.6);
+    border-radius: 0.65rem;
+    padding: 0.3rem 0.75rem;
+    color: hsl(var(--primary));
+    font-size: 0.9rem;
+    line-height: 1.25;
+  }
+
+  .honor-tags li:nth-child(even) {
+    border-color: hsl(187 72% 42% / 0.7);
+    color: hsl(187 72% 42%);
+  }
+
+  @media (max-width: 40rem) {
+    .honor-card {
+      grid-template-columns: 1fr;
+      gap: 0;
+      border-radius: 1rem;
+    }
+
+    .honor-image {
+      height: min(60vw, 18rem);
+      padding: 0.5rem;
+    }
+
+    .honor-content {
+      padding: 1.25rem;
+    }
+  }
+</style>
