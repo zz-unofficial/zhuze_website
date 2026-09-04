@@ -1,0 +1,325 @@
+---
+import config, { profile } from '@/site-config'
+import { Icon } from 'astro-pure/user'
+
+interface Props {
+  avatar: {
+    src: string
+    width: number
+    height: number
+  }
+}
+
+const { avatar } = Astro.props
+---
+
+<section class='profile-intro animate' aria-labelledby='profile-name'>
+  <article class='profile-card'>
+    <div class='profile-identity'>
+      <img
+        class='profile-avatar'
+        src={avatar.src}
+        width={avatar.width}
+        height={avatar.height}
+        alt={config.logo.alt || 'Profile photo'}
+        loading='eager'
+        fetchpriority='high'
+      />
+
+      <div class='profile-copy'>
+        <h1 id='profile-name' class='profile-name'>
+          <span class='profile-native-name'>{profile.name}</span>
+          <span aria-hidden='true'> / </span>
+          <em>{profile.englishName}</em>
+        </h1>
+        <p class='profile-headline'>{profile.headline}</p>
+        <p class='profile-availability'>
+          <span aria-hidden='true'></span>
+          {profile.availability}
+        </p>
+
+        <div class='profile-details'>
+          <p>
+            <span class='profile-detail-icon' aria-hidden='true'>⌖</span>
+            {profile.location}
+          </p>
+          <a href={'mailto:' + profile.email}>
+            <span class='profile-detail-icon' aria-hidden='true'>✉</span>
+            {profile.email}
+          </a>
+        </div>
+      </div>
+
+      <div class='profile-actions'>
+        <div class='profile-socials' aria-label='Social links'>
+          {
+            profile.socialLinks.map((link) => (
+              <a href={link.href} target='_blank' rel='noreferrer' aria-label={link.label}>
+                <Icon name={link.icon} class='size-4' />
+              </a>
+            ))
+          }
+        </div>
+        <a class='profile-cv' href={profile.cvUrl} target='_blank' rel='noreferrer'>
+          Download CV <span aria-hidden='true'>↗</span>
+        </a>
+      </div>
+    </div>
+
+    <div class='profile-skills' aria-label='Profile skills'>
+      {
+        profile.skillGroups.map((group) => (
+          <section>
+            <h2>{group.title}</h2>
+            <div>
+              {group.skills.map((skill) => <span>{skill}</span>)}
+            </div>
+          </section>
+        ))
+      }
+    </div>
+  </article>
+</section>
+
+<style>
+  .profile-intro {
+    width: 100%;
+    margin-bottom: 2.25rem;
+  }
+
+  .profile-card {
+    overflow: hidden;
+    border: 1px solid hsl(var(--border));
+    border-radius: 1rem;
+    background: hsl(var(--card) / 0.38);
+  }
+
+  .profile-identity {
+    display: grid;
+    grid-template-columns: 6.3rem minmax(0, 1fr) auto;
+    gap: 1.75rem;
+    align-items: center;
+    padding: 1.35rem 1.5rem;
+  }
+
+  .profile-avatar {
+    width: 6.3rem;
+    height: 6.3rem;
+    border: 0.2rem solid hsl(var(--background));
+    border-radius: 999px;
+    object-fit: cover;
+    box-shadow: 0 0 0 1px hsl(var(--border));
+  }
+
+  .profile-copy {
+    min-width: 0;
+  }
+
+  .profile-name {
+    margin: 0;
+    font-size: clamp(1.45rem, 3vw, 2.05rem);
+    line-height: 1.15;
+    letter-spacing: -0.035em;
+  }
+
+  .profile-name em {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-weight: 600;
+  }
+
+  .profile-native-name {
+    font-family: 'Noto Serif SC', 'Source Han Serif SC', 'Songti SC', STSong, SimSun, serif;
+    font-weight: 700;
+    letter-spacing: 0;
+  }
+
+  .profile-headline {
+    margin: 0.35rem 0 0;
+    color: hsl(var(--muted-foreground));
+    font-size: 0.95rem;
+  }
+
+  .profile-availability {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    margin: 0.65rem 0 0;
+    color: hsl(var(--muted-foreground));
+    font-size: 0.85rem;
+    line-height: 1.4;
+  }
+
+  .profile-availability span {
+    width: 0.45rem;
+    height: 0.45rem;
+    flex: none;
+    border-radius: 999px;
+    background: #9d7aea;
+  }
+
+  .profile-details {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 1rem;
+    margin-top: 0.65rem;
+    color: hsl(var(--muted-foreground));
+    font-size: 0.85rem;
+  }
+
+  .profile-details p,
+  .profile-details a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    margin: 0;
+  }
+
+  .profile-details a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .profile-detail-icon {
+    color: hsl(var(--primary));
+    font-size: 1rem;
+    line-height: 1;
+  }
+
+  .profile-actions {
+    display: flex;
+    align-self: end;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.45rem;
+    padding-bottom: 0.15rem;
+  }
+
+  .profile-socials {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 0.4rem;
+    transform: translateY(0.6rem);
+  }
+
+  .profile-socials a {
+    display: inline-flex;
+    width: 2rem;
+    height: 2rem;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid hsl(var(--border));
+    border-radius: 999px;
+    background: hsl(var(--background) / 0.5);
+    color: hsl(var(--muted-foreground));
+    text-decoration: none;
+  }
+
+  .profile-socials a:hover {
+    border-color: hsl(var(--primary) / 0.6);
+    background: hsl(var(--primary) / 0.08);
+    color: hsl(var(--primary));
+  }
+
+  .profile-cv {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    border: 1px solid hsl(var(--primary) / 0.5);
+    border-radius: 999px;
+    padding: 0.4rem 0.75rem;
+    color: hsl(var(--primary));
+    font-size: 0.82rem;
+    font-weight: 600;
+    text-decoration: none;
+    transform: translateY(0.6rem);
+  }
+
+  .profile-cv:hover {
+    border-color: hsl(var(--primary));
+    background: hsl(var(--primary) / 0.08);
+  }
+
+  .profile-skills {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.7rem 1.5rem;
+    border-top: 1px solid hsl(var(--border));
+    padding: 0.85rem 1.5rem 1rem;
+  }
+
+  .profile-skills section {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.35rem 0.55rem;
+    flex: 0 1 auto;
+  }
+
+  .profile-skills h2 {
+    margin: 0;
+    color: hsl(var(--muted-foreground));
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+  }
+
+  .profile-skills section > div {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+  }
+
+  .profile-skills span {
+    border-radius: 0.4rem;
+    padding: 0.2rem 0.4rem;
+    background: hsl(var(--background) / 0.58);
+    color: hsl(var(--muted-foreground));
+    font-size: 0.78rem;
+  }
+
+  @media (max-width: 48rem) {
+    .profile-identity {
+      grid-template-columns: 6rem minmax(0, 1fr);
+    }
+
+    .profile-actions {
+      grid-column: 1 / -1;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 0.1rem;
+    }
+
+    .profile-socials {
+      justify-content: flex-start;
+    }
+
+    .profile-skills {
+      gap: 0.65rem 1.25rem;
+    }
+  }
+
+  @media (max-width: 34rem) {
+    .profile-identity {
+      grid-template-columns: 1fr;
+      gap: 1.2rem;
+      padding: 1.25rem;
+    }
+
+    .profile-avatar {
+      width: 5.7rem;
+      height: 5.7rem;
+    }
+
+    .profile-actions {
+      align-items: flex-start;
+      justify-content: flex-start;
+    }
+
+    .profile-skills {
+      padding: 0.85rem 1.25rem 1rem;
+    }
+  }
+</style>

@@ -26,7 +26,7 @@ export const theme: ThemeUserConfig = {
   },
   /** Set a logo image to show in the homepage. */
   logo: {
-    src: '/src/assets/avatar.png',
+    src: '/src/assets/avatar.jpg',
     alt: 'Avatar'
   },
 
@@ -197,6 +197,29 @@ export const terms: CardListData = {
       title: 'Disclaimer',
       link: '/terms/disclaimer'
     }
+  ]
+}
+
+/**
+ * Homepage profile card. Replace the placeholder values below with your own details.
+ * The card is rendered at the top of the homepage.
+ */
+export const profile = {
+  name: '朱泽',
+  englishName: 'zhuze',
+  headline: 'School of Electronics And Information, Northwestern Polytechnical University',
+  availability: 'Open to collaboration, research, or internship opportunities',
+  location: 'Xi\'an, ShaanXi, China',
+  email: 'zzzhuze@mail.nwpu.edu.cn',
+  cvUrl: '/files/cv-zh-CN.pdf',
+  socialLinks: [
+    { label: 'GitHub', icon: 'github', href: 'https://github.com/zz-unofficial' },
+    { label: 'Bilibili', icon: 'bilibili', href: 'https://space.bilibili.com/3546702879394547' }
+  ] as const,
+  skillGroups: [
+    { title: 'Languages', skills: ['C++', 'Python'] },
+    { title: 'Focus', skills: ['Computer Vision', 'Robotics'] },
+    { title: 'Interests', skills: ['Computer Vision', 'Embedded Systems'] }
   ]
 }
 
