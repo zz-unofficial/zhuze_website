@@ -1,0 +1,54 @@
+---
+import { getCollection, render, type CollectionEntry } from 'astro:content'
+import { TOC } from 'astro-pure/components/pages'
+import PageLayout from '@/layouts/ContentLayout.astro'
+import { projects, type ProjectItem } from '@/site-config'
+
+export const prerender = true
+
+type DetailProject = ProjectItem & { slug: string }
+
+export async function getStaticPaths() {
+  const getSlugFromEntryId = (id: string) =>
+    id.replace(/\/index(?:\.mdx?)?$/, '').replace(/\.mdx?$/, '')
+  const contentEntries = await getCollection('projects', (entry) => !entry.data.draft)
+  const entriesBySlug = new Map(
+    contentEntries.map((entry) => [getSlugFromEntryId(entry.id), entry])
+  )
+  const detailProjects = projects.filter(
+    (project): project is DetailProject => !project.draft
+  )
+
+  for (const project of detailProjects) {
+    if (!entriesBySlug.has(project.slug))
+      throw new Error(
+        `Project "${project.title}" requires src/content/projects/${project.slug}/index.md or index.mdx for its details page`
+      )
+  }
+
+  return detailProjects.map((project) => ({
+    params: { slug: project.slug },
+    props: { project, entry: entriesBySlug.get(project.slug)! }
+  }))
+}
+
+interface Props {
+  project: DetailProject
+  entry: CollectionEntry<'projects'>
+}
+
+const { project, entry } = Astro.props
+const { Content, headings } = await render(entry)
+---
+
+<PageLayout meta={{ title: project.title, description: project.description }} back='/projects'>
+  {headings.length > 0 && <TOC {headings} slot='sidebar' />}
+
+  <Fragment slot='header'>
+    <h1 class='text-2xl font-medium sm:mb-2 sm:text-3xl'>{project.title}</h1>
+    <p class='mt-3 text-muted-foreground'>{project.description}</p>
+    <p class='mt-2 text-sm text-muted-foreground'>{project.period}</p>
+  </Fragment>
+
+  <Content />
+</PageLayout>

@@ -1,0 +1,80 @@
+---
+title: 'Rescue Team - NPU Dancing Robot Base'
+description: 'Designed and integrated the electronics and embedded control stack for a tracked disaster-response robot.'
+draft: false
+---
+
+import ImageGrid from '@/components/content/ImageGrid.astro'
+import PcbDemo01 from './assets/PCB-Demo01.png'
+import PcbDemo02 from './assets/PCB-Demo02.png'
+import PcbDemo03 from './assets/PCB-Demo03.png'
+import PcbDemo04 from './assets/PCB-Demo04.png'
+import debug01 from './assets/debug01.jpg'
+import debug02 from './assets/debug02.jpg'
+
+# 履带式救援机器人
+
+## 项目简介
+
+隶属于西北工业大学舞蹈机器人基地救援组。项目面向复杂环境中的越障、搜救、自主建图和目标定位，围绕履带结构、导航控制与多传感器信息融合持续迭代。作为一个面向实地任务的移动机器人平台，系统需要将机械执行、感知、供电与控制模块稳定地组织为整体。
+
+我主要负责全车电控系统的方案落地：从原理图和 PCB 制作，到下位机软件、通信接口与整车联调，建立一条可持续迭代的工程链路；同时与机械、软件方向协同，确保各模块能够在车端稳定配合。
+
+## 个人工作
+
+负责全车电控系统的整体构建与落地实施，工作覆盖硬件设计、嵌入式软件、通信接口与新方案验证。核心目标是在不断变化的功能需求下，让控制系统具备清晰的接口边界、可调试性与后续扩展空间。
+
+### PCB原理图绘制与制作
+
+使用 Altium Designer 和 JLCEDA 完成原理图设计，将功能需求落实为可制造的 PCB 方案；随后完成打板、焊接与上电调试。通过硬件实际验证和问题定位，持续完善电路设计，使其能够服务于整车控制与执行需求。
+
+### 下位机软件编写
+
+主要使用 STM32 开发下位机程序，采用 CubeMX + CMake 工具链组织工程。围绕车端控制需求完成软件编写与调试，并配合上位机进行功能联动，使硬件接口、执行机构与上层控制逻辑能够形成完整闭环。
+
+### 通信协议构建
+
+与软件方向共同梳理通信边界和数据格式，覆盖电机控制、状态数据交互等需求。在执行层使用 CANopen 等方式对接控制逻辑，将不同模块的输入、输出和调试流程统一到可协作的接口约定中。
+
+### 新技术拓展
+
+- 探索超级电容功率控制方案，为整车供电与峰值功率管理预留新的实现路径。
+- 基于 V3S Linux 搭建无线烧录流程，减少现场部署与调试时的操作成本。
+- 尝试使用 PICO 头显进行机械臂遥操作，探索面向复杂任务的直观交互方式。
+
+## 工作展示
+
+### PCB
+
+<ImageGrid
+  images={[
+    { src: PcbDemo01, alt: 'PCB design demonstration 1' },
+    { src: PcbDemo02, alt: 'PCB design demonstration 2' },
+    { src: PcbDemo03, alt: 'PCB design demonstration 3', rotation: 90 },
+    { src: PcbDemo04, alt: 'PCB design demonstration 4', rotation: 90 }
+  ]}
+/>
+
+### 调试展示
+<ImageGrid
+  images={[
+    { src: debug01, alt: 'debug demonstration 1' },
+    { src: debug02, alt: 'debug demonstration 2' }
+  ]}
+/>
+
+## 子项目链接
+
+### Wireless Debugger
+
+基于 V3S Linux 的无线 J-Link / ST-Link 烧录与调试工具，用于减少现场部署、固件更新和调试时的物理连接依赖。
+
+**Status:** Documentation is being prepared.  
+[View repository →](https://github.com/zz-unofficial/WirelessDebugger)
+
+### XRobot
+
+面向 XR 遥操作与机器人控制的实验项目。目标是将 PICO 头显、控制器等 VR 输入设备接入 PC 端 ROS 2 系统，并通过统一数据接口控制机械臂、云台、仿真机器人及后续真实设备。
+
+**Status:** Documentation is being prepared.  
+[View repository →](https://github.com/zz-unofficial/XRobot)

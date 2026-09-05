@@ -1,0 +1,268 @@
+---
+import { Icon } from 'astro-pure/user'
+import type { ProjectItem } from '@/site-config'
+
+interface Props {
+  items: ProjectItem[]
+}
+
+const { items } = Astro.props
+
+const images = import.meta.glob<{ default: ImageMetadata }>(
+  '/src/**/*.{jpeg,jpg,png,gif,avif,webp}'
+)
+const entries = await Promise.all(
+  items.map(async (item) => {
+    const collage = await Promise.all(
+      item.images.map(async (image) => {
+        const loadImage = images[image.src]
+        if (!loadImage) throw new Error(`"${image.src}" does not exist in the "src" directory`)
+
+        return { ...image, asset: (await loadImage()).default }
+      })
+    )
+
+    return { ...item, collage, href: `/projects/${item.slug}` }
+  })
+)
+---
+
+<div class='project-list'>
+  {
+    entries.map((entry) => (
+      <article class='project-card'>
+        <div class='project-content'>
+          <a class='project-detail' href={entry.href} aria-label={`View ${entry.title}`}>
+            <p class='project-period'>{entry.period}</p>
+            <h3>{entry.title}</h3>
+            <p class='project-description'>{entry.description}</p>
+            {
+              entry.tags.length > 0 && (
+                <ul class='project-tags' aria-label='Project tags'>
+                  {entry.tags.map((tag) => (
+                    <li>{tag}</li>
+                  ))}
+                </ul>
+              )
+            }
+            <span class='project-link'>View project <span aria-hidden='true'>→</span></span>
+          </a>
+          <div class='project-actions'>
+            <a class='project-link' href={entry.href} aria-label={`View ${entry.title}`}>
+              View project <span aria-hidden='true'>→</span>
+            </a>
+          {
+            entry.links?.length && (
+              <ul class='project-links' aria-label={`${entry.title} external links`}>
+                {entry.links.map((link) => (
+                  <li>
+                    <a
+                      href={link.href}
+                      target='_blank'
+                      rel='noreferrer'
+                      aria-label={link.label}
+                      title={link.label}
+                    >
+                      <Icon name={link.icon} />
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            )
+          }
+          </div>
+        </div>
+        <a class='project-collage' href={entry.href} aria-label={`View ${entry.title}`}>
+          {entry.collage.map((image) => (
+            <img src={image.asset.src} alt={image.alt} loading='lazy' />
+          ))}
+        </a>
+      </article>
+    ))
+  }
+</div>
+
+<style>
+  .project-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .project-card {
+    display: grid;
+    grid-template-columns: minmax(0, 1.7fr) minmax(15rem, 0.8fr);
+    min-height: 20rem;
+    overflow: hidden;
+    border: 1px solid hsl(var(--border));
+    border-radius: 1.5rem;
+    background: hsl(var(--muted));
+    color: inherit;
+    text-decoration: none;
+    transition: border-color 150ms ease, box-shadow 150ms ease;
+  }
+
+  .project-card:hover {
+    border-color: hsl(var(--foreground) / 0.3);
+    box-shadow: 0 0.5rem 1.5rem hsl(var(--foreground) / 0.1);
+  }
+
+  .project-content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    padding: clamp(1.25rem, 3vw, 2.25rem);
+  }
+
+  .project-detail {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .project-period {
+    margin: 0;
+    color: hsl(var(--primary));
+    font-size: 0.9rem;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .project-content h3 {
+    margin: 0.5rem 0 0;
+    font-size: clamp(1.45rem, 2.5vw, 2rem);
+    line-height: 1.15;
+  }
+
+  .project-description {
+    margin: 0.85rem 0 0;
+    color: hsl(var(--muted-foreground));
+    font-size: 1rem;
+    line-height: 1.55;
+  }
+
+  .project-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.55rem;
+    margin: 1rem 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .project-tags li {
+    border: 1px solid hsl(var(--primary) / 0.6);
+    border-radius: 0.65rem;
+    padding: 0.3rem 0.75rem;
+    color: hsl(var(--primary));
+    font-size: 0.9rem;
+    line-height: 1.25;
+  }
+
+  .project-link {
+    color: hsl(var(--primary));
+    font-weight: 500;
+    text-decoration: none;
+  }
+
+  .project-detail > .project-link,
+  .project-actions .project-link span {
+    display: none;
+  }
+
+  .project-actions .project-link::after {
+    margin-left: 0.35rem;
+    content: '->';
+  }
+
+  .project-detail > .project-link {
+    display: none;
+  }
+
+  .project-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    width: 100%;
+    margin-top: 1.25rem;
+  }
+
+  .project-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .project-links a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    border: 1px solid hsl(var(--border));
+    border-radius: 9999px;
+    background: hsl(var(--background));
+    color: hsl(var(--muted-foreground));
+    transition: border-color 150ms ease, color 150ms ease, transform 150ms ease;
+  }
+
+  .project-links a:hover {
+    border-color: hsl(var(--primary) / 0.7);
+    color: hsl(var(--primary));
+    transform: translateY(-0.1rem);
+  }
+
+  .project-collage {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: repeat(2, minmax(0, 1fr));
+    gap: 0.25rem;
+    min-height: 100%;
+    padding: 0.25rem;
+    background: hsl(var(--border));
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .project-collage img {
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    object-fit: cover;
+    transition: transform 250ms ease;
+  }
+
+  .project-card:hover .project-collage img {
+    transform: scale(1.035);
+  }
+
+  @media (max-width: 48rem) {
+    .project-card {
+      grid-template-columns: 1fr;
+      min-height: 0;
+      border-radius: 1rem;
+    }
+
+    .project-collage {
+      order: -1;
+      min-height: min(76vw, 26rem);
+    }
+
+    .project-content {
+      padding: 1.5rem;
+    }
+  }
+
+  @media (max-width: 30rem) {
+    .project-actions {
+      align-items: flex-start;
+      flex-direction: column;
+      gap: 0.85rem;
+    }
+  }
+</style>

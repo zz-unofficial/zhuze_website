@@ -73,4 +73,18 @@ const honors = defineCollection({
     })
 })
 
-export const collections = { blog, docs, honors }
+// Markdown detail pages for projects. Project card metadata remains in src/site.config.ts.
+const projects = defineCollection({
+  loader: glob({ base: './src/content/projects', pattern: '**/*.{md,mdx}' }),
+  schema: () =>
+    z.object({
+      title: z.string().default(''),
+      description: z.string().default(''),
+      publishDate: z.coerce.date().default(new Date(0)),
+      updatedDate: z.coerce.date().optional(),
+      tags: z.array(z.string()).default([]),
+      draft: z.boolean().default(false)
+    })
+})
+
+export const collections = { blog, docs, honors, projects }

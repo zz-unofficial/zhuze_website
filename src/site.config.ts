@@ -1,4 +1,10 @@
-import type { CardListData, Config, IntegrationUserConfig, ThemeUserConfig } from 'astro-pure/types'
+import type {
+  CardListData,
+  Config,
+  IconsType,
+  IntegrationUserConfig,
+  ThemeUserConfig
+} from 'astro-pure/types'
 
 export const theme: ThemeUserConfig = {
   // [Basic]
@@ -275,6 +281,57 @@ export const honors: HonorItem[] = [
     image: '/src/content/honors/rst/cover.jpg',
     imageAlt: 'RoboCup China 2026 award trophies and robot',
     slug: 'rst'
+  }
+]
+
+export interface ProjectImage {
+  src: string
+  alt: string
+}
+
+export interface ProjectLink {
+  label: string
+  href: string
+  icon: IconsType
+}
+
+export interface ProjectItem {
+  title: string
+  description: string
+  period: string
+  tags: string[]
+  /** Exactly four images, displayed as a 2 × 2 collage on each project card. */
+  images: [ProjectImage, ProjectImage, ProjectImage, ProjectImage]
+  /** Optional external destinations shown as icon buttons below the project description. */
+  links?: ProjectLink[]
+  /** Matches src/content/projects/<slug>/index.md. */
+  slug: string
+  draft?: boolean
+}
+
+/**
+ * Projects shown on the homepage and at /projects, newest first.
+ *
+ * Store every project's Markdown/MDX file and images in src/content/projects/<slug>/.
+ * Add one object per project; its four `images` entries form the card collage.
+ */
+export const projects: ProjectItem[] = [
+  {
+    title: 'Rescue Team - NPU Dancing Robot Base',
+    description:
+      'Focused on tracked vehicle structures, navigation control, and multi-sensor fusion for obstacle traversal, search and rescue, autonomous mapping, and target localization in complex environments. My contribution: developed the complete vehicle electronic control system.',
+    period: '2026',
+    tags: ['Robotics', 'Embedded'],
+    images: [
+      { src: '/src/content/projects/rescue/assets/01.jpg', alt: 'Project image one' },
+      { src: '/src/content/projects/rescue/assets/02.png', alt: 'Project image two' },
+      { src: '/src/content/projects/rescue/assets/03.png', alt: 'Project image three' },
+      { src: '/src/content/projects/rescue/assets/04.jpg', alt: 'Project image four' }
+    ],
+    slug: 'rescue',
+    links: [
+      { label: 'Organization website', href: 'https://dance-robot-base.github.io/', icon: 'link' },
+    ]
   }
 ]
 

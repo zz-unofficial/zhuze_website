@@ -12,7 +12,8 @@ import ProfileIntro from '@/components/home/ProfileIntro.astro'
 import ProjectCard from '@/components/home/ProjectCard.astro'
 import Section from '@/components/home/Section.astro'
 import SkillLayout from '@/components/home/SkillLayout.astro'
-import config, { education, honors } from '@/site-config'
+import ProjectsSection from '@/components/projects/ProjectsSection.astro'
+import config, { education, honors, projects } from '@/site-config'
 
 const languages = ['Html', 'JavaScript', 'CSS', 'Shell']
 const frontend = ['TypeScript', 'Vite', 'Webpack', 'Astro']
@@ -23,6 +24,8 @@ const allPosts = (await getBlogCollection()) as CollectionEntry<'blog'>[]
 const allPostsByDate = sortMDByDate(allPosts).slice(0, MAX_POSTS) as CollectionEntry<'blog'>[]
 const publishedHonors = honors.filter((honor) => !honor.draft)
 const featuredHonors = publishedHonors.slice(0, 2)
+const publishedProjects = projects.filter((project) => !project.draft)
+const featuredProjects = publishedProjects.slice(0, 2)
 
 const imagePath = config.logo.src
 const images = import.meta.glob<{ default: ImageMetadata }>(
@@ -52,6 +55,10 @@ const avatar = (await images[imagePath]()).default
         <Button title='More about me' class='w-fit self-end' href='/about' variant='ahead' />
       </Section>
       <EducationSection items={education} />
+      <ProjectsSection
+        items={featuredProjects}
+        moreHref={publishedProjects.length > featuredProjects.length ? '/projects' : undefined}
+      />
       {
         featuredHonors.length > 0 && (
           <HonorsSection

@@ -1,0 +1,45 @@
+---
+import { Button } from 'astro-pure/user'
+import type { ProjectItem } from '@/site-config'
+import ProjectCards from './ProjectCards.astro'
+
+interface Props {
+  items: ProjectItem[]
+  moreHref?: string
+}
+
+const { items, moreHref } = Astro.props
+---
+
+<section class='projects-section'>
+  <h2>Projects</h2>
+  {
+    items.length > 0 ? (
+      <>
+        <ProjectCards {items} />
+        {moreHref && <Button title='More projects' class='w-fit self-end' href={moreHref} variant='ahead' />}
+      </>
+    ) : (
+      <p class='projects-empty'>Projects will be added soon.</p>
+    )
+  }
+</section>
+
+<style>
+  .projects-section {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .projects-section h2 {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 600;
+  }
+
+  .projects-empty {
+    margin: 0;
+    color: hsl(var(--muted-foreground));
+  }
+</style>

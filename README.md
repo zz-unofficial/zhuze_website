@@ -250,7 +250,48 @@ bun run build
 
 检查通过后，将文章、素材和其他修改一起提交并推送，Vercel 会自动发布。
 
-## 五、域名和 Vercel 配置
+## 五、添加 Projects
+
+项目列表由 `src/site.config.ts` 中的 `projects` 数组管理；每个项目卡片固定使用四张图片，首页显示最新两项，全部项目显示在 `/projects`。项目详情使用 Markdown 或 MDX。
+
+~~~text
+src/content/projects/
+└─ robot-project/              与 site.config.ts 中的 slug 一致
+   ├─ index.md                 项目详情正文
+   └─ assets/
+      ├─ 01.jpg
+      ├─ 02.jpg
+      ├─ 03.jpg
+      └─ 04.jpg
+~~~
+
+先复制 `src/content/projects/_template/`，改名为项目的 `slug`，再在 `projects` 数组添加一项：
+
+~~~ts
+{
+  title: 'Project title',
+  description: 'Briefly describe the problem, your contribution, and the outcome.',
+  period: '2026',
+  tags: ['Robotics', 'Embedded'],
+  images: [
+    { src: '/src/content/projects/robot-project/assets/01.jpg', alt: 'Project image one' },
+    { src: '/src/content/projects/robot-project/assets/02.jpg', alt: 'Project image two' },
+    { src: '/src/content/projects/robot-project/assets/03.jpg', alt: 'Project image three' },
+    { src: '/src/content/projects/robot-project/assets/04.jpg', alt: 'Project image four' }
+  ],
+  links: [
+    { label: 'GitHub', href: 'https://github.com/your-account/robot-project', icon: 'github' },
+    { label: 'Project website', href: 'https://example.com', icon: 'earth' }
+  ],
+  slug: 'robot-project'
+}
+~~~
+
+四张图片会在项目卡片右侧组成 2 × 2 拼贴；点击整张卡片会进入 `/projects/robot-project`。当项目尚未完成时可加上 `draft: true`，首页和项目总览均不会显示它。
+
+`links` 为可选项，图标会显示在卡片文字底部并在新标签页打开外部地址。常用图标包括 `github`、`earth`、`document`、`bilibili` 和 `youtube`。
+
+## 六、域名和 Vercel 配置
 
 当前正式域名是：
 
@@ -280,7 +321,7 @@ Vercel 项目当前使用以下命令：
 
 域名 DNS 记录由域名服务商管理，Vercel 负责构建、部署、HTTPS 和全球访问。域名解析和 Vercel 中的域名状态显示为有效后，网站即可通过正式域名访问。
 
-## 六、更新网站的方法
+## 七、更新网站的方法
 
 ### 推荐方法：推送到 GitHub 自动发布
 
