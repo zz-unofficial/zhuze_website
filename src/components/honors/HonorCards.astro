@@ -31,7 +31,9 @@ const entries = await Promise.all(
   {
     entries.map((entry) => (
       <article class='honor-card'>
-        <img class='honor-image' src={entry.image.src} alt={entry.imageAlt} loading='lazy' />
+        <figure class='honor-media'>
+          <img class='honor-image' src={entry.image.src} alt={entry.imageAlt} loading='lazy' />
+        </figure>
         <div class='honor-content'>
           <h3>
             <a
@@ -68,21 +70,30 @@ const entries = await Promise.all(
 
   .honor-card {
     display: grid;
-    grid-template-columns: minmax(12rem, 17rem) minmax(0, 1fr);
-    align-items: center;
-    gap: clamp(1.25rem, 3vw, 2.5rem);
+    grid-template-columns: minmax(13rem, 16rem) minmax(0, 1fr);
+    min-height: 15.5rem;
     overflow: hidden;
     border: 1px solid hsl(var(--border));
     border-radius: 1.5rem;
     background: hsl(var(--muted));
   }
 
+  .honor-media {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    align-self: stretch;
+    margin: 0;
+    padding: 1rem;
+    border-right: 1px solid hsl(var(--border));
+    background: hsl(var(--background) / 0.35);
+  }
+
   .honor-image {
     width: 100%;
-    height: 14rem;
+    height: 100%;
+    max-height: 13.5rem;
     min-height: 0;
-    padding: 0.75rem;
-    background: hsl(var(--muted));
     object-fit: contain;
     object-position: center;
   }
@@ -92,7 +103,8 @@ const entries = await Promise.all(
     flex-direction: column;
     align-items: flex-start;
     justify-content: center;
-    padding: 1.5rem 1.75rem 1.5rem 0;
+    min-width: 0;
+    padding: 1.75rem 2rem;
   }
 
   .honor-content h3 {
@@ -112,14 +124,18 @@ const entries = await Promise.all(
 
   .honor-description,
   .honor-date {
-    margin: 0.7rem 0 0;
     color: hsl(var(--muted-foreground));
     font-size: 1rem;
     line-height: 1.55;
   }
 
   .honor-description {
+    margin: 0.75rem 0 0;
     white-space: pre-line;
+  }
+
+  .honor-date {
+    margin: 0.7rem 0 0;
   }
 
   .honor-tags {
@@ -148,17 +164,19 @@ const entries = await Promise.all(
   @media (max-width: 40rem) {
     .honor-card {
       grid-template-columns: 1fr;
-      gap: 0;
       border-radius: 1rem;
     }
 
-    .honor-image {
-      height: min(60vw, 18rem);
-      padding: 0.5rem;
+    .honor-media {
+      min-height: min(60vw, 18rem);
+      padding: 0.75rem;
+      border-right: 0;
+      border-bottom: 1px solid hsl(var(--border));
     }
 
     .honor-content {
       padding: 1.25rem;
     }
+
   }
 </style>
