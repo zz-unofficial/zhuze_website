@@ -10,6 +10,9 @@ interface SubstatsItem {
   text: string
   api?: string
   count?: number
+  source?: 'bilibili'
+  uid?: string
+  fallbackCount?: number
 }
 
 type Props = {
@@ -19,8 +22,27 @@ type Props = {
 const { stats } = Astro.props as Props
 
 async function fetchCount(item: SubstatsItem) {
-  if (!item.api) return
   try {
+    if (item.source === 'bilibili') {
+      if (!item.uid) throw new Error('Bilibili statistics require a user ID')
+
+      const response = await fetch(
+        `https://api.bilibili.com/x/relation/stat?vmid=${encodeURIComponent(item.uid)}`,
+        {
+          headers: { Referer: 'https://www.bilibili.com/' },
+          signal: AbortSignal.timeout(5000)
+        }
+      )
+      const data = await response.json()
+      if (!response.ok || data.code !== 0 || typeof data.data?.follower !== 'number') {
+        throw new Error(data.message || 'Unable to fetch Bilibili follower count')
+      }
+
+      item.count = data.data.follower
+      return
+    }
+
+    if (!item.api) return
     const response = await fetch(`https://api.swo.moe/stats/${item.api}`)
     const data = await response.json()
     if (data.failed) {
@@ -29,6 +51,10 @@ async function fetchCount(item: SubstatsItem) {
       item.count = data.count
     }
   } catch (error) {
+    if (item.fallbackCount !== undefined) {
+      item.count = item.fallbackCount
+      return
+    }
     console.error(`Error in Substats fetching: ${error}`)
   }
 }
@@ -50,13 +76,13 @@ await Promise.all(stats.map(fetchCount))
           <div class='flex-1 text-foreground transition-colors group-hover:text-primary'>
             {platform}
           </div>
-          {count ? (
+          {count !== undefined ? (
             <div class='flex items-center gap-1.5'>
               <samp>{count}</samp>
               <span class='text-sm font-normal'>{text}</span>
             </div>
           ) : (
-            'null'
+            <span class='text-sm font-normal'>{text}</span>
           )}
         </div>
       </a>
@@ -64,7 +90,7 @@ await Promise.all(stats.map(fetchCount))
   }
 </div>
 <div class='mt-2 text-right text-sm'>
-  Display real-time; powered by <a
+  GitHub statistics update on deployment; powered by <a
     class='text-muted-foreground'
     href='http://github.com/spencerwooo/substats'
     target='_blank'

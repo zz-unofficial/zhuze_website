@@ -9,7 +9,6 @@ import PageLayout from '@/layouts/BaseLayout.astro'
 import EducationSection from '@/components/home/EducationSection.astro'
 import PostsSection from '@/components/home/PostsSection.astro'
 import ProfileIntro from '@/components/home/ProfileIntro.astro'
-import Section from '@/components/home/Section.astro'
 import ProjectsSection from '@/components/projects/ProjectsSection.astro'
 import config, { education, honors, projects } from '@/site-config'
 
@@ -39,15 +38,18 @@ const avatar = (await images[imagePath]()).default
     </div>
 
     <div id='content' class='animate flex flex-col gap-y-10 md:w-4/5 lg:w-5/6'>
-      <Section title='About'>
-        <p class='text-muted-foreground'>Developer / Designer</p>
-        <p class='text-muted-foreground'>
-          Lorem ipsum dolor sit amet, vidit suscipit at mei. Quem denique mea id. Usu ei regione
-          indoctum dissentiunt, cu meliore fuisset mei, vel quod voluptua ne. Ex dicat impedit mel,
-          at eum oratio possit voluptatum.
-        </p>
-        <Button title='More about me' class='w-fit self-end' href='/about' variant='ahead' />
-      </Section>
+      <section class='home-about'>
+        <h2>About</h2>
+        <div class='home-about-card'>
+          <p class='text-primary text-sm font-medium tracking-wide'>Undergraduate Student</p>
+          <p class='mt-2 max-w-3xl leading-7 text-muted-foreground'>
+            Hi, I’m Zhuze, a sophomore in the School of Electronics and Information at Northwestern
+            Polytechnical University (NWPU). This site brings together my projects, paper notes,
+            technical write-ups, award records, and occasional writing beyond my main research interests.
+          </p>
+          <Button title='More about me' class='mt-4 w-fit self-end' href='/about' variant='ahead' />
+        </div>
+      </section>
       <EducationSection items={education} />
       <ProjectsSection
         items={featuredProjects}
@@ -67,3 +69,34 @@ const avatar = (await images[imagePath]()).default
     <Quote class='mt-12' />
   </main>
 </PageLayout>
+
+<style>
+  .home-about {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .home-about h2 {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 600;
+  }
+
+  .home-about-card {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    border: 1px solid hsl(var(--border));
+    border-radius: 1.5rem;
+    padding: 1.5rem 2rem;
+    background: hsl(var(--muted));
+  }
+
+  @media (max-width: 34rem) {
+    .home-about-card {
+      border-radius: 1rem;
+      padding: 1.25rem;
+    }
+  }
+</style>

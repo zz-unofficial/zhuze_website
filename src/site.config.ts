@@ -9,7 +9,7 @@ import type {
 export const theme: ThemeUserConfig = {
   // [Basic]
   /** Title for your website. Will be used in metadata and as browser tab title. */
-  title: 'Zhuze',
+  title: 'Zhuze\'s Personal Website',
   /** Will be used in index page & copyright declaration */
   author: 'Zhuze',
   /** Description metadata for your website. Can be used in page metadata. */
@@ -54,10 +54,10 @@ export const theme: ThemeUserConfig = {
   /** Configure the header of your site. */
   header: {
     menu: [
-      { title: 'Blog', link: '/blog' },
-      { title: 'Docs', link: '/docs' },
+      { title: 'Home', link: '/' },
       { title: 'Projects', link: '/projects' },
-      { title: 'Links', link: '/links' },
+      { title: 'Honors', link: '/honors' },
+      { title: 'Posts', link: '/blog' },
       { title: 'About', link: '/about' }
     ]
   },
