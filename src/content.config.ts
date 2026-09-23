@@ -57,22 +57,6 @@ const docs = defineCollection({
     })
 })
 
-// Markdown detail pages for awards and honors.
-const honors = defineCollection({
-  loader: glob({ base: './src/content/honors', pattern: '**/*.{md,mdx}' }),
-  schema: () =>
-    z.object({
-      // These defaults keep the collection compatible with the theme's shared content helpers.
-      // Honor card metadata remains the single source of truth in `src/site.config.ts`.
-      title: z.string().default(''),
-      description: z.string().default(''),
-      publishDate: z.coerce.date().default(new Date(0)),
-      updatedDate: z.coerce.date().optional(),
-      tags: z.array(z.string()).default([]),
-      draft: z.boolean().default(false)
-    })
-})
-
 // Markdown detail pages for projects. Project card metadata remains in src/site.config.ts.
 const projects = defineCollection({
   loader: glob({ base: './src/content/projects', pattern: '**/*.{md,mdx}' }),
@@ -87,4 +71,4 @@ const projects = defineCollection({
     })
 })
 
-export const collections = { blog, docs, honors, projects }
+export const collections = { blog, docs, projects }

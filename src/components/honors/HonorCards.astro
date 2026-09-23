@@ -16,12 +16,9 @@ const entries = await Promise.all(
     if (!loadImage)
       throw new Error(`"${item.image}" does not exist in the "src" directory`)
 
-    const isExternal = 'link' in item
     return {
       ...item,
-      image: (await loadImage()).default,
-      href: isExternal ? item.link : `/honors/${item.slug}`,
-      isExternal
+      image: (await loadImage()).default
     }
   })
 )
@@ -36,13 +33,7 @@ const entries = await Promise.all(
         </figure>
         <div class='honor-content'>
           <h3>
-            <a
-              href={entry.href}
-              target={entry.isExternal ? '_blank' : undefined}
-              rel={entry.isExternal ? 'noreferrer' : undefined}
-            >
-              {entry.title}
-            </a>
+            {entry.title}
           </h3>
           <p class='honor-description'>{entry.description}</p>
           {
@@ -111,15 +102,6 @@ const entries = await Promise.all(
     margin: 0;
     font-size: clamp(1.25rem, 2.5vw, 1.75rem);
     line-height: 1.25;
-  }
-
-  .honor-content h3 a {
-    color: inherit;
-    text-decoration: none;
-  }
-
-  .honor-content h3 a:hover {
-    color: hsl(var(--primary));
   }
 
   .honor-description,

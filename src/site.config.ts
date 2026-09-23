@@ -227,7 +227,7 @@ export const education: EducationItem[] = [
   }
 ]
 
-export interface HonorBase {
+export interface HonorItem {
   title: string
   description: string
   date: string
@@ -239,28 +239,10 @@ export interface HonorBase {
 }
 
 /**
- * Choose exactly one destination for each honor:
- * - `slug` opens a Markdown detail page at `/honors/<slug>`.
- * - `link` opens an external record, certificate, or official announcement.
- */
-export type HonorItem = HonorBase &
-  (
-    | {
-        slug: string
-        link?: never
-      }
-    | {
-        link: string
-        slug?: never
-      }
-  )
-
-/**
  * Awards and honors, newest first.
  *
- * Put each award in `src/content/honors/<slug>/`, then add an item here. The homepage
- * automatically shows the first two published items; the remaining items appear at `/honors`.
- * Each honor directory contains `index.md` and any images used by that honor.
+ * This is a display-only list. Add one object per award; the homepage automatically shows the first
+ * two published items, while the remaining items appear at `/honors`.
  */
 export const honors: HonorItem[] = [
   {
@@ -269,8 +251,7 @@ export const honors: HonorItem[] = [
     date: 'May 2026',
     tags: ['National', 'Robotics'],
     image: '/src/content/honors/robocup2026/cover.jpg',
-    imageAlt: 'RoboCup China 2026 award trophies and robot',
-    slug: 'robocup2026'
+    imageAlt: 'RoboCup China 2026 award trophies and robot'
   },
 
   {
@@ -279,8 +260,7 @@ export const honors: HonorItem[] = [
     date: 'August 2025 , August 2026',
     tags: ['National', 'Robotics'],
     image: '/src/content/honors/rst/cover.jpg',
-    imageAlt: 'RoboCup China 2026 award trophies and robot',
-    slug: 'rst'
+    imageAlt: 'RoboCup China 2026 award trophies and robot'
   }
 ]
 
