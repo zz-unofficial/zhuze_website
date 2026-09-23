@@ -1,0 +1,42 @@
+---
+import { Button } from 'astro-pure/user'
+import PostCollectionCards from '@/components/posts/PostCollectionCards.astro'
+import PageLayout from '@/layouts/BaseLayout.astro'
+import { postCollections } from '@/site-config'
+
+const publishedCollections = postCollections.filter((collection) => !collection.draft)
+---
+
+<PageLayout meta={{ title: 'Posts', description: 'Technical notes and knowledge collections.' }}>
+  <Button title='Back' href='/' variant='back' />
+  <main class='mt-6 lg:mt-10'>
+    <header class='posts-header animate'>
+      <h1>Posts</h1>
+      <p>Technical notes and curated knowledge collections.</p>
+    </header>
+    {
+      publishedCollections.length > 0 ? (
+        <PostCollectionCards items={publishedCollections} />
+      ) : (
+        <p class='text-muted-foreground'>No post collections published yet.</p>
+      )
+    }
+  </main>
+</PageLayout>
+
+<style>
+  .posts-header {
+    margin-bottom: 2rem;
+  }
+
+  .posts-header h1 {
+    margin: 0;
+    font-size: 2rem;
+    font-weight: 600;
+  }
+
+  .posts-header p {
+    margin: 0.65rem 0 0;
+    color: hsl(var(--muted-foreground));
+  }
+</style>

@@ -57,7 +57,7 @@ export const theme: ThemeUserConfig = {
       { title: 'Home', link: '/' },
       { title: 'Projects', link: '/projects' },
       { title: 'Honors', link: '/honors' },
-      { title: 'Posts', link: '/blog' },
+      { title: 'Posts', link: '/posts' },
       { title: 'About', link: '/about' }
     ]
   },
@@ -332,6 +332,40 @@ export const projects: ProjectItem[] = [
     links: [
       { label: 'Organization website', href: 'https://dance-robot-base.github.io/', icon: 'link' },
     ]
+  }
+]
+
+export interface PostCollection {
+  /** URL segment for the local collection page, for example `/posts/embedded-systems`. */
+  slug: string
+  title: string
+  description: string
+  /** Blog directory names from `src/content/blog/`, displayed in this exact order. */
+  postIds?: string[]
+  /** Optional external destination, for example a Feishu knowledge-base link. */
+  externalUrl?: string
+  /** Set to true to hide a collection until it is ready. */
+  draft?: boolean
+}
+
+/**
+ * Top-level entries for the Posts area.
+ *
+ * To add an article to a local entry, append its directory name from `src/content/blog/` to `postIds`.
+ * To point an entry to Feishu or another external knowledge base, fill in `externalUrl`.
+ */
+export const postCollections: PostCollection[] = [
+  {
+    slug: 'embedded-systems',
+    title: 'Embedded Systems',
+    description: 'Notes on microcontrollers, real-time peripherals, embedded communication, and PCB design.',
+    postIds: ['hrtim', 'canopen', 'altium-designer-introduction']
+  },
+  {
+    slug: 'robotics',
+    title: 'Robotics',
+    description: 'Robotics notes, learning resources, and team knowledge will be collected here.',
+    externalUrl: 'https://rcnot1ut6crb.feishu.cn/wiki/P0IbwVHIWienc5kKzbRcZhoUnZD'
   }
 ]
 

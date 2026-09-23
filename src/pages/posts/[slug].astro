@@ -1,0 +1,107 @@
+---
+import type { CollectionEntry } from 'astro:content'
+
+import { PostPreview } from 'astro-pure/components/pages'
+import { getBlogCollection, sortMDByDate } from 'astro-pure/server'
+import { Button } from 'astro-pure/user'
+import PageLayout from '@/layouts/BaseLayout.astro'
+import { postCollections, type PostCollection } from '@/site-config'
+
+export const prerender = true
+
+export async function getStaticPaths() {
+  const allPosts = sortMDByDate(await getBlogCollection()) as CollectionEntry<'blog'>[]
+  const postsById = new Map(allPosts.map((post) => [post.id, post]))
+
+  return postCollections
+    .filter((collection) => !collection.draft && !collection.externalUrl)
+    .map((collection) => {
+      const posts = (collection.postIds ?? []).map((id) => {
+        const post = postsById.get(id)
+        if (!post) {
+          throw new Error(
+            `Post collection "${collection.title}" references missing blog post "${id}" in src/content/blog/`
+          )
+        }
+        return post
+      })
+
+      return {
+        params: { slug: collection.slug },
+        props: { collection, posts }
+      }
+    })
+}
+
+interface Props {
+  collection: PostCollection
+  posts: CollectionEntry<'blog'>[]
+}
+
+const { collection, posts } = Astro.props
+const meta = {
+  title: collection.title,
+  description: collection.description
+}
+---
+
+<PageLayout {meta}>
+  <Button title='Back to posts' href='/posts' variant='back' />
+  <main class='mt-6 lg:mt-10'>
+    <header class='collection-header animate'>
+      <p>Posts collection</p>
+      <h1>{collection.title}</h1>
+      <div>{collection.description}</div>
+    </header>
+
+    {
+      posts.length > 0 ? (
+        <section class='animate' aria-label={`${collection.title} posts`}>
+          <ul class='post-list'>
+            {posts.map((post) => <PostPreview {post} detailed />)}
+          </ul>
+        </section>
+      ) : (
+        <p class='text-muted-foreground'>This collection is being prepared. Check back soon.</p>
+      )
+    }
+  </main>
+</PageLayout>
+
+<style>
+  .collection-header {
+    max-width: 46rem;
+    margin-bottom: 2.25rem;
+  }
+
+  .collection-header p {
+    margin: 0;
+    color: hsl(var(--primary));
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+  }
+
+  .collection-header h1 {
+    margin: 0.55rem 0 0;
+    font-size: 2rem;
+    font-weight: 600;
+  }
+
+  .collection-header div {
+    margin-top: 0.7rem;
+    color: hsl(var(--muted-foreground));
+    line-height: 1.65;
+  }
+
+  .post-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+</style>

@@ -1,0 +1,121 @@
+---
+import type { PostCollection } from '@/site-config'
+
+interface Props {
+  items: PostCollection[]
+}
+
+const { items } = Astro.props
+
+function getDestination(item: PostCollection) {
+  return item.externalUrl ?? `/posts/${item.slug}`
+}
+
+function getMeta(item: PostCollection) {
+  if (item.externalUrl) return 'External knowledge base'
+  if (item.postIds?.length) return `${item.postIds.length} ${item.postIds.length === 1 ? 'article' : 'articles'}`
+  return 'Coming soon'
+}
+---
+
+<div class='post-collection-grid'>
+  {
+    items.map((item) => {
+      const isExternal = Boolean(item.externalUrl)
+
+      return (
+        <a
+          class='post-collection-card'
+          href={getDestination(item)}
+          target={isExternal ? '_blank' : undefined}
+          rel={isExternal ? 'noreferrer' : undefined}
+        >
+          <span class='post-collection-meta'>{getMeta(item)}</span>
+          <h3>{item.title}</h3>
+          <p>{item.description}</p>
+          <span class='post-collection-action'>
+            {item.externalUrl ? 'Open collection' : item.postIds?.length ? 'Explore articles' : 'View collection'}
+            <span aria-hidden='true'>→</span>
+          </span>
+        </a>
+      )
+    })
+  }
+</div>
+
+<style>
+  .post-collection-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+  }
+
+  .post-collection-card {
+    display: flex;
+    flex-direction: column;
+    min-height: 15rem;
+    border: 1px solid hsl(var(--border));
+    border-radius: 1.25rem;
+    padding: 1.5rem;
+    background: hsl(var(--muted));
+    color: hsl(var(--foreground));
+    text-decoration: none;
+    transition: border-color 150ms ease, box-shadow 150ms ease, transform 150ms ease;
+  }
+
+  .post-collection-card:hover {
+    border-color: hsl(var(--primary) / 0.55);
+    box-shadow: 0 0.5rem 1.5rem hsl(var(--foreground) / 0.08);
+    transform: translateY(-0.15rem);
+  }
+
+  .post-collection-meta {
+    color: hsl(var(--primary));
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+  }
+
+  .post-collection-card h3 {
+    margin: 1.25rem 0 0;
+    font-size: clamp(1.35rem, 2vw, 1.7rem);
+    line-height: 1.25;
+  }
+
+  .post-collection-card p {
+    margin: 0.75rem 0 0;
+    color: hsl(var(--muted-foreground));
+    line-height: 1.65;
+  }
+
+  .post-collection-action {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: auto;
+    padding-top: 1.5rem;
+    color: hsl(var(--primary));
+    font-weight: 500;
+  }
+
+  .post-collection-action span {
+    font-size: 1.2em;
+    transition: transform 150ms ease;
+  }
+
+  .post-collection-card:hover .post-collection-action span {
+    transform: translateX(0.2rem);
+  }
+
+  @media (max-width: 42rem) {
+    .post-collection-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .post-collection-card {
+      min-height: 0;
+      border-radius: 1rem;
+    }
+  }
+</style>

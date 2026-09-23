@@ -191,12 +191,32 @@ draft: false
 字段说明：
 
 - `title`：文章标题，最长 60 个字符。
-- `description`：文章摘要，最长 160 个字符；会显示在首页 Posts 卡片和博客列表中。
-- `publishDate`：发布日期，格式为 `YYYY-MM-DD`；首页 Posts 按日期倒序显示最新两篇。
+- `description`：文章摘要，最长 160 个字符；会显示在文章列表与搜索结果中。
+- `publishDate`：发布日期，格式为 `YYYY-MM-DD`；用于博客归档与排序。
 - `tags`：文章标签；大小写会自动统一。
 - `language`：可填写 `English` 或 `Chinese`。
 - `heroImage`：可选封面；`src` 使用相对于正文的路径，`alt` 说明图片内容。建议使用 PNG、JPG 或 WebP。
 - `draft: true`：草稿，不会出现在首页、博客列表或正式构建中；完成后改回 `false`。
+
+### 管理 Posts 主题入口
+
+首页和 `/posts` 展示的是主题入口，不会随着文章数量增加而无限拉长。入口统一在 `src/site.config.ts` 的 `postCollections` 中维护：
+
+~~~ts
+{
+  slug: 'embedded-systems',
+  title: 'Embedded Systems',
+  description: '入口摘要。',
+  postIds: ['hrtim', 'canopen', 'altium-designer-introduction']
+}
+~~~
+
+- `slug`：入口页面地址，例如 `/posts/embedded-systems`。
+- `postIds`：要收录的文章目录名，按数组顺序展示；新文章建好后，在这里追加目录名即可。
+- `externalUrl`：可选。填写飞书知识库等外部地址后，该入口会直接跳转到外部网站。
+- `draft: true`：暂时隐藏整个入口。
+
+原始的全部文章归档仍保留在 `/blog`，每篇文章的详情地址仍是 `/blog/<文章目录名>`。
 
 ### 正常插入一张图片
 
