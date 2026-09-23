@@ -1,0 +1,256 @@
+---
+import { Icon } from 'astro-pure/user'
+import { profile } from '@/site-config'
+
+const updatedDate = new Date().toISOString().slice(0, 10)
+const contacts = [
+  { label: 'Email', href: `mailto:${profile.email}`, icon: 'email' as const },
+  ...profile.socialLinks
+]
+
+const exploreLinks = [
+  { label: 'Projects', description: 'Selected work', href: '/projects' },
+  { label: 'Honors', description: 'Awards and records', href: '/honors' },
+  { label: 'Posts', description: 'Notes and writing', href: '/blog' },
+  { label: 'About', description: 'More about me', href: '/about' }
+]
+---
+
+<footer class='site-footer'>
+  <div class='footer-grid'>
+    <section class='footer-profile' aria-labelledby='footer-name'>
+      <p class='footer-eyebrow'>Personal website</p>
+      <h2 id='footer-name'>{profile.englishName}</h2>
+      <p class='footer-headline'>{profile.headline}</p>
+      <p class='footer-location'>{profile.location}</p>
+
+      <nav class='footer-contacts' aria-label='Contact and social links'>
+        {
+          contacts.map((contact) => (
+            <a href={contact.href} target={contact.icon === 'email' ? undefined : '_blank'} rel='noreferrer'>
+              <Icon name={contact.icon} class='size-4' />
+              <span>{contact.label}</span>
+            </a>
+          ))
+        }
+      </nav>
+
+      <p class='footer-note'>A personal archive for projects, research notes, and technical writing.</p>
+    </section>
+
+    <section class='footer-explore' aria-labelledby='footer-explore-title'>
+      <div class='footer-explore-heading'>
+        <h2 id='footer-explore-title'>Explore</h2>
+        <span>zhuze.website</span>
+      </div>
+      <nav class='footer-links' aria-label='Site navigation'>
+        {
+          exploreLinks.map((link) => (
+            <a href={link.href}>
+              <span>{link.label}</span>
+              <small>{link.description}</small>
+            </a>
+          ))
+        }
+      </nav>
+      <p class='footer-stack'>Built with <a href='https://astro.build/' target='_blank' rel='noreferrer'>Astro</a> and hosted on <a href='https://vercel.com/' target='_blank' rel='noreferrer'>Vercel</a>.</p>
+    </section>
+  </div>
+
+  <div class='footer-meta'>
+    <p>© {new Date().getFullYear()} Zhuze · <a href='/terms'>Site Policy</a></p>
+    <p>Updated {updatedDate}</p>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    width: 100%;
+    margin-top: 4rem;
+    border-top: 1px solid hsl(var(--border));
+    padding: 2.5rem 0 1.25rem;
+  }
+
+  .footer-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.45fr) minmax(18rem, 0.9fr);
+    gap: 3rem;
+    padding: 0 0.75rem 2.5rem;
+  }
+
+  .footer-profile,
+  .footer-explore {
+    min-width: 0;
+  }
+
+  .footer-eyebrow {
+    margin: 0;
+    color: hsl(var(--primary));
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .footer-profile h2,
+  .footer-explore h2 {
+    margin: 0.4rem 0 0;
+    font-size: 1.45rem;
+    line-height: 1.25;
+  }
+
+  .footer-headline,
+  .footer-location,
+  .footer-note,
+  .footer-stack {
+    color: hsl(var(--muted-foreground));
+  }
+
+  .footer-headline {
+    max-width: 42rem;
+    margin: 0.55rem 0 0;
+    line-height: 1.55;
+  }
+
+  .footer-location {
+    margin: 0.35rem 0 0;
+    font-size: 0.92rem;
+  }
+
+  .footer-contacts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem 1.25rem;
+    margin-top: 1.5rem;
+  }
+
+  .footer-contacts a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    color: hsl(var(--foreground));
+    font-size: 0.92rem;
+    text-decoration: none;
+  }
+
+  .footer-contacts a:hover,
+  .footer-stack a:hover,
+  .footer-meta a:hover {
+    color: hsl(var(--primary));
+  }
+
+  .footer-note {
+    max-width: 38rem;
+    margin: 2rem 0 0;
+    line-height: 1.6;
+  }
+
+  .footer-explore {
+    border: 1px solid hsl(var(--border));
+    border-radius: 1rem;
+    padding: 1.25rem;
+    background: hsl(var(--muted) / 0.55);
+  }
+
+  .footer-explore-heading {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .footer-explore-heading h2 {
+    margin: 0;
+    font-size: 1.1rem;
+  }
+
+  .footer-explore-heading span {
+    color: hsl(var(--muted-foreground));
+    font-size: 0.78rem;
+  }
+
+  .footer-links {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.5rem;
+    margin-top: 1rem;
+  }
+
+  .footer-links a {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    border: 1px solid transparent;
+    border-radius: 0.65rem;
+    padding: 0.65rem;
+    color: hsl(var(--foreground));
+    text-decoration: none;
+  }
+
+  .footer-links a:hover {
+    border-color: hsl(var(--border));
+    background: hsl(var(--background) / 0.45);
+    color: hsl(var(--primary));
+  }
+
+  .footer-links small {
+    color: hsl(var(--muted-foreground));
+    font-size: 0.75rem;
+  }
+
+  .footer-stack {
+    margin: 1.25rem 0 0;
+    font-size: 0.85rem;
+    line-height: 1.5;
+  }
+
+  .footer-stack a,
+  .footer-meta a {
+    color: inherit;
+    text-decoration: underline;
+    text-underline-offset: 0.18em;
+  }
+
+  .footer-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    border-top: 1px solid hsl(var(--border));
+    padding: 1.25rem 0.75rem 0;
+    color: hsl(var(--muted-foreground));
+    font-size: 0.85rem;
+  }
+
+  .footer-meta p {
+    margin: 0;
+  }
+
+  @media (max-width: 44rem) {
+    .footer-grid {
+      grid-template-columns: 1fr;
+      gap: 1.75rem;
+    }
+  }
+
+  @media (max-width: 34rem) {
+    .site-footer {
+      margin-top: 3rem;
+      padding-top: 2rem;
+    }
+
+    .footer-grid {
+      padding: 0 0 2rem;
+    }
+
+    .footer-links {
+      grid-template-columns: 1fr;
+    }
+
+    .footer-meta {
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 1rem 0 0;
+    }
+  }
+</style>

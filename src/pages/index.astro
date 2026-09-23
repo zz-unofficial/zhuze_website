@@ -40,14 +40,24 @@ const avatar = (await images[imagePath]()).default
     <div id='content' class='animate flex flex-col gap-y-10 md:w-4/5 lg:w-5/6'>
       <section class='home-about'>
         <h2>About</h2>
-        <div class='home-about-card'>
-          <p class='text-primary text-sm font-medium tracking-wide'>Undergraduate Student</p>
-          <p class='mt-2 max-w-3xl leading-7 text-muted-foreground'>
-            Hi, I’m Zhuze, a sophomore in the School of Electronics and Information at Northwestern
-            Polytechnical University (NWPU). This site brings together my projects, paper notes,
-            technical write-ups, award records, and occasional writing beyond my main research interests.
-          </p>
-          <Button title='More about me' class='mt-4 w-fit self-end' href='/about' variant='ahead' />
+        <div class='about-content'>
+          <div class='about-copy'>
+            <p>
+              Hi, I’m Zhuze, a sophomore in the <strong>School of Electronics and Information</strong> at
+              <strong>Northwestern Polytechnical University</strong>.
+            </p>
+            <p>
+              My current research focuses on <strong>Embodied AI</strong>, with a particular emphasis on
+              <strong>World Models</strong>. I am advised by <strong>Professor Dang Zheng</strong> in the
+              <strong>PUPL Lab</strong> at NWPU.
+            </p>
+            <p>
+              This site brings together my <strong>projects</strong>, <strong>paper notes</strong>,
+              <strong>technical write-ups</strong>, and <strong>award records</strong>, alongside occasional
+              writing beyond my main research interests.
+            </p>
+          </div>
+          <Button title='More about me' class='mt-5 w-fit self-end' href='/about' variant='ahead' />
         </div>
       </section>
       <EducationSection items={education} />
@@ -79,24 +89,35 @@ const avatar = (await images[imagePath]()).default
 
   .home-about h2 {
     margin: 0;
+    color: hsl(var(--foreground));
     font-size: 1.5rem;
     font-weight: 600;
   }
 
-  .home-about-card {
+  .about-content {
     display: flex;
     flex-direction: column;
     width: 100%;
-    border: 1px solid hsl(var(--border));
-    border-radius: 1.5rem;
-    padding: 1.5rem 2rem;
-    background: hsl(var(--muted));
   }
 
-  @media (max-width: 34rem) {
-    .home-about-card {
-      border-radius: 1rem;
-      padding: 1.25rem;
-    }
+  .about-copy {
+    max-width: 72rem;
   }
+
+  .about-copy p {
+    margin: 0;
+    color: hsl(var(--foreground));
+    font-size: 1.05rem;
+    line-height: 1.75;
+  }
+
+  .about-copy p + p {
+    margin-top: 1.2rem;
+  }
+
+  .about-copy strong {
+    color: hsl(var(--primary));
+    font-weight: 600;
+  }
+
 </style>

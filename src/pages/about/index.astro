@@ -11,15 +11,26 @@ const headings = [
 ---
 
 <PageLayout title='About' {headings} comment>
-  <p>
-    <p class='text-muted-foreground'>Undergraduate Student</p>
-    <p class='text-muted-foreground'>
-        Hi, I'm Zhuze, a sophomore in School of Electronics and Information at Northwestern Polytechnical University (NWPU).
-        <br />
-        This site collects my projects, paper notes, technical write-ups, award records and occasional writing on unrelated subjects .
+  <div class='about-summary'>
+    <p>
+      Hi, I’m Zhuze, a sophomore in the <strong>School of Electronics and Information</strong> at
+      <strong>Northwestern Polytechnical University (NWPU)</strong>.
     </p>
-    Motto: Attention Is All You Need. <Spoiler>恭喜！你的CUDA失忆了！！！</Spoiler>
-  </p>
+    <p>
+      My current research focuses on <strong>Embodied AI</strong>, with a particular emphasis on
+      <strong>World Models</strong>. I am advised by <strong>Professor Dang Zheng</strong> in the
+      <strong>PUPL Lab</strong> at NWPU.
+    </p>
+    <p>
+      This site brings together my <strong>projects</strong>, <strong>paper notes</strong>,
+      <strong>technical write-ups</strong>, and <strong>award records</strong>, alongside occasional writing
+      beyond my main research interests.
+    </p>
+    <p class='about-motto'>
+      Motto: Attention Is All You Need.
+      <Spoiler>恭喜！你的CUDA失忆了！！！</Spoiler>
+    </p>
+  </div>
 
   {/* general-talk */}
   <h2 id='hobbies'>Hobbies</h2>
@@ -98,3 +109,31 @@ const headings = [
     <footer>— Dylan Thomas</footer>
   </Collapse>
 </PageLayout>
+
+<style>
+  .about-summary {
+    margin-bottom: 2.5rem;
+  }
+
+  .about-summary p {
+    margin: 0;
+    color: hsl(var(--foreground));
+    font-size: 1rem;
+    line-height: 1.8;
+  }
+
+  .about-summary p + p {
+    margin-top: 1rem;
+  }
+
+  .about-summary strong {
+    color: hsl(var(--primary));
+    font-weight: 600;
+  }
+
+  .about-summary .about-motto {
+    margin-top: 1.4rem;
+    color: hsl(var(--muted-foreground));
+    font-size: 0.95rem;
+  }
+</style>

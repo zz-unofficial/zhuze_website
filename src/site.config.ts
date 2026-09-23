@@ -353,8 +353,8 @@ export const profile = {
   ] as const,
   skillGroups: [
     { title: 'Languages', skills: ['C++', 'Python'] },
-    { title: 'Focus', skills: ['Computer Vision', 'Robotics'] },
-    { title: 'Interests', skills: ['Computer Vision', 'Embedded Systems'] }
+    { title: 'Focus', skills: ['Robotics', 'World Models'] },
+    { title: 'Interests', skills: ['Robotics', 'Embedded Systems'] }
   ]
 }
 
