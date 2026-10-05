@@ -3,9 +3,10 @@ import type { PostCollection } from '@/site-config'
 
 interface Props {
   items: PostCollection[]
+  counts: Record<string, number>
 }
 
-const { items } = Astro.props
+const { items, counts } = Astro.props
 
 function getDestination(item: PostCollection) {
   return item.externalUrl ?? `/posts/${item.slug}`
@@ -13,7 +14,8 @@ function getDestination(item: PostCollection) {
 
 function getMeta(item: PostCollection) {
   if (item.externalUrl) return 'External knowledge base'
-  if (item.postIds?.length) return `${item.postIds.length} ${item.postIds.length === 1 ? 'article' : 'articles'}`
+  const count = counts[item.slug] ?? 0
+  if (count) return `${count} ${count === 1 ? 'article' : 'articles'}`
   return 'Coming soon'
 }
 ---
@@ -34,7 +36,7 @@ function getMeta(item: PostCollection) {
           <h3>{item.title}</h3>
           <p>{item.description}</p>
           <span class='post-collection-action'>
-            {item.externalUrl ? 'Open collection' : item.postIds?.length ? 'Explore articles' : 'View collection'}
+            {item.externalUrl ? 'Open collection' : counts[item.slug] ? 'Explore articles' : 'View collection'}
             <span aria-hidden='true'>→</span>
           </span>
         </a>

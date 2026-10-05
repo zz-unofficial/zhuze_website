@@ -2,6 +2,7 @@
 title: 'Altium Designer 入门：从工程文件到 PCB 设计流程'
 description: '梳理 Altium Designer 中原理图、元件库、PCB 封装库与 PCB 文件的关系，并概述基础设计流程与常用规则。'
 publishDate: 2025-08-04
+category: 'embedded-systems'
 tags: ['PCB', 'Altium Designer', 'Embedded']
 language: 'Chinese'
 heroImage:

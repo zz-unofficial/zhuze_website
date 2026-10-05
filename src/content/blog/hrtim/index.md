@@ -2,6 +2,7 @@
 title: 'Hrtim 学习笔记'
 description: '梳理 STM32 HRTIM 的定时器结构、PWM 事件、死区、同步和 CubeMX 配置。'
 publishDate: 2026-06-27
+category: 'embedded-systems'
 tags:
   - HRTIM
   - STM32

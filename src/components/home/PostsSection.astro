@@ -4,16 +4,17 @@ import PostCollectionCards from '@/components/posts/PostCollectionCards.astro'
 
 interface Props {
   items: PostCollection[]
+  counts: Record<string, number>
 }
 
-const { items } = Astro.props
+const { items, counts } = Astro.props
 ---
 
 <section class='posts-section'>
   <h2>Posts</h2>
   {
     items.length > 0 ? (
-      <PostCollectionCards {items} />
+      <PostCollectionCards {items} {counts} />
     ) : (
       <p class='text-muted-foreground'>No post collections published yet.</p>
     )

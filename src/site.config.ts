@@ -320,8 +320,6 @@ export interface PostCollection {
   slug: string
   title: string
   description: string
-  /** Blog directory names from `src/content/blog/`, displayed in this exact order. */
-  postIds?: string[]
   /** Optional external destination, for example a Feishu knowledge-base link. */
   externalUrl?: string
   /** Set to true to hide a collection until it is ready. */
@@ -331,15 +329,14 @@ export interface PostCollection {
 /**
  * Top-level entries for the Posts area.
  *
- * To add an article to a local entry, append its directory name from `src/content/blog/` to `postIds`.
+ * Local entries automatically display articles whose Frontmatter `category` matches `slug`, newest first.
  * To point an entry to Feishu or another external knowledge base, fill in `externalUrl`.
  */
 export const postCollections: PostCollection[] = [
   {
     slug: 'embedded-systems',
     title: 'Embedded Systems',
-    description: 'Notes on microcontrollers, real-time peripherals, embedded communication, and PCB design.',
-    postIds: ['hrtim', 'canopen', 'altium-designer-introduction']
+    description: 'Notes on microcontrollers, real-time peripherals, embedded communication, and PCB design.'
   },
   {
     slug: 'robotics',

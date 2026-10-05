@@ -149,6 +149,46 @@ waline: {
 
 ## 四、发布博客文章
 
+### 推荐流程（PowerShell）
+
+在项目根目录创建草稿，`slug` 会成为网址最后一段：
+
+~~~powershell
+bun run post:new my-new-post "文章标题"
+~~~
+
+这个命令会创建 `src/content/blog/my-new-post/index.md` 与 `assets/`。草稿默认属于当前唯一的站内分类 `embedded-systems`，并设置 `draft: true`。如果以后增加其他站内分类，可以把分类 slug 作为最后一个参数传入。
+
+接着编辑 `index.md`：填写 `description`、正文和标签，图片放入同目录的 `assets/`。封面可选；要使用封面，在 Frontmatter 中加入：
+
+~~~yaml
+heroImage:
+  src: './assets/cover.png'
+  alt: '封面图片说明'
+~~~
+
+发布前可先检查文章：
+
+~~~powershell
+bun run post:validate my-new-post
+~~~
+
+内容完成后运行：
+
+~~~powershell
+bun run post:publish my-new-post
+~~~
+
+该命令检查必填字段和本地图片，将草稿的 `publishDate` 更新为当天并把 `draft` 设为 `false`，随后执行 Astro 检查。若检查失败，会恢复原始草稿文件。文章会自动出现在对应分类页，按日期从新到旧排列，无需修改 `site.config.ts`。最后提交并推送修改，Vercel 才会更新线上网站。旧文章修改正文时，不需要重新创建目录；如需标记更新日期，可在 Frontmatter 增加 `updatedDate: YYYY-MM-DD`。
+
+如果本次只新增了这篇文章，可以按命令输出执行：
+
+~~~powershell
+git add src/content/blog/my-new-post
+git commit -m "Publish my-new-post"
+git push
+~~~
+
 ### 推荐目录结构
 
 每篇文章使用一个独立目录；目录名即文章的 URL 标识，建议使用全小写英文和连字符。例如下面的文章访问地址为 `/blog/canopen`：
@@ -173,6 +213,7 @@ src/content/blog/
 title: '文章标题'
 description: '用于列表与搜索展示的简短摘要。'
 publishDate: 2026-09-04
+category: 'embedded-systems'
 tags:
   - STM32
   - Embedded
@@ -193,6 +234,7 @@ draft: false
 - `title`：文章标题，最长 60 个字符。
 - `description`：文章摘要，最长 160 个字符；会显示在文章列表与搜索结果中。
 - `publishDate`：发布日期，格式为 `YYYY-MM-DD`；用于博客归档与排序。
+- `category`：必填，必须与 `postCollections` 中的站内分类 `slug` 一致；当前使用 `embedded-systems`。
 - `tags`：文章标签；大小写会自动统一。
 - `language`：可填写 `English` 或 `Chinese`。
 - `heroImage`：可选封面；`src` 使用相对于正文的路径，`alt` 说明图片内容。建议使用 PNG、JPG 或 WebP。
@@ -207,12 +249,11 @@ draft: false
   slug: 'embedded-systems',
   title: 'Embedded Systems',
   description: '入口摘要。',
-  postIds: ['hrtim', 'canopen', 'altium-designer-introduction']
 }
 ~~~
 
 - `slug`：入口页面地址，例如 `/posts/embedded-systems`。
-- `postIds`：要收录的文章目录名，按数组顺序展示；新文章建好后，在这里追加目录名即可。
+- 文章通过 Frontmatter 中的 `category` 自动进入相应分类，分类内按日期倒序展示；无需维护文章 ID 列表。
 - `externalUrl`：可选。填写飞书知识库等外部地址后，该入口会直接跳转到外部网站。
 - `draft: true`：暂时隐藏整个入口。
 

@@ -2,9 +2,11 @@
 import { Button } from 'astro-pure/user'
 import PostCollectionCards from '@/components/posts/PostCollectionCards.astro'
 import PageLayout from '@/layouts/BaseLayout.astro'
+import { getCategorizedPosts, getPostCounts } from '@/lib/post-collections'
 import { postCollections } from '@/site-config'
 
 const publishedCollections = postCollections.filter((collection) => !collection.draft)
+const counts = getPostCounts(await getCategorizedPosts())
 ---
 
 <PageLayout meta={{ title: 'Posts', description: 'Technical notes and knowledge collections.' }}>
@@ -16,7 +18,7 @@ const publishedCollections = postCollections.filter((collection) => !collection.
     </header>
     {
       publishedCollections.length > 0 ? (
-        <PostCollectionCards items={publishedCollections} />
+        <PostCollectionCards items={publishedCollections} {counts} />
       ) : (
         <p class='text-muted-foreground'>No post collections published yet.</p>
       )

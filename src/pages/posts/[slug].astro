@@ -1,44 +1,27 @@
 ---
-import type { CollectionEntry } from 'astro:content'
-
 import { PostPreview } from 'astro-pure/components/pages'
-import { getBlogCollection, sortMDByDate } from 'astro-pure/server'
 import { Button } from 'astro-pure/user'
 import PageLayout from '@/layouts/BaseLayout.astro'
+import { getCategorizedPosts } from '@/lib/post-collections'
 import { postCollections, type PostCollection } from '@/site-config'
 
 export const prerender = true
 
-export async function getStaticPaths() {
-  const allPosts = sortMDByDate(await getBlogCollection()) as CollectionEntry<'blog'>[]
-  const postsById = new Map(allPosts.map((post) => [post.id, post]))
-
+export function getStaticPaths() {
   return postCollections
     .filter((collection) => !collection.draft && !collection.externalUrl)
-    .map((collection) => {
-      const posts = (collection.postIds ?? []).map((id) => {
-        const post = postsById.get(id)
-        if (!post) {
-          throw new Error(
-            `Post collection "${collection.title}" references missing blog post "${id}" in src/content/blog/`
-          )
-        }
-        return post
-      })
-
-      return {
-        params: { slug: collection.slug },
-        props: { collection, posts }
-      }
-    })
+    .map((collection) => ({
+      params: { slug: collection.slug },
+      props: { collection }
+    }))
 }
 
 interface Props {
   collection: PostCollection
-  posts: CollectionEntry<'blog'>[]
 }
 
-const { collection, posts } = Astro.props
+const { collection } = Astro.props
+const posts = (await getCategorizedPosts()).filter((post) => post.data.category === collection.slug)
 const meta = {
   title: collection.title,
   description: collection.description

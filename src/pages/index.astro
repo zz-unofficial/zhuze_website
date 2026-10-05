@@ -7,6 +7,7 @@ import EducationSection from '@/components/home/EducationSection.astro'
 import PostsSection from '@/components/home/PostsSection.astro'
 import ProfileIntro from '@/components/home/ProfileIntro.astro'
 import ProjectsSection from '@/components/projects/ProjectsSection.astro'
+import { getCategorizedPosts, getPostCounts } from '@/lib/post-collections'
 import config, { education, honors, postCollections, projects } from '@/site-config'
 
 const publishedHonors = honors.filter((honor) => !honor.draft)
@@ -14,6 +15,7 @@ const featuredHonors = publishedHonors.slice(0, 2)
 const publishedProjects = projects.filter((project) => !project.draft)
 const featuredProjects = publishedProjects.slice(0, 2)
 const publishedPostCollections = postCollections.filter((collection) => !collection.draft)
+const postCounts = getPostCounts(await getCategorizedPosts())
 
 const imagePath = config.logo.src
 const images = import.meta.glob<{ default: ImageMetadata }>(
@@ -69,7 +71,7 @@ const avatar = (await images[imagePath]()).default
         )
       }
 
-      <PostsSection items={publishedPostCollections} />
+      <PostsSection items={publishedPostCollections} counts={postCounts} />
     </div>
     <Quote class='mt-12' />
   </main>
