@@ -25,6 +25,8 @@
     "@astrojs/compiler-rs": "^0.1.10",
     "@astrojs/rss": "4.0.18",
     "@astrojs/vercel": "10.0.6",
+    "@vercel/analytics": "^2.0.1",
+    "@vercel/speed-insights": "^2.0.0",
     "@waline/client": "^3.13.0",
     "astro": "6.2.1",
     "astro-pure": "1.4.7",
