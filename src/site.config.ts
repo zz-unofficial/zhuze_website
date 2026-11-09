@@ -118,8 +118,8 @@ export const integ: IntegrationUserConfig = {
     applyTip: [
       { name: 'Name', val: theme.title },
       { name: 'Desc', val: theme.description || 'Null' },
-      { name: 'Link', val: 'https://zhuze.website' },
-      { name: 'Avatar', val: 'https://zhuze.website/favicon/favicon.ico' }
+      { name: 'Link', val: 'https://www.zhuze.website' },
+      { name: 'Avatar', val: 'https://www.zhuze.website/favicon/favicon.ico' }
     ],
     // Cache avatars in `public/avatars/` to improve user experience.
     cacheAvatar: false
